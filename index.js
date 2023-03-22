@@ -24,9 +24,23 @@ class ConcatStream extends Writable {
 
     this.encoding = encoding
     this.shouldInferEncoding = shouldInferEncoding
+    this.writableFinished = false
+
+    this.on('finish', function () { this.writableFinished = true })
 
     if (cb) this.on('finish', function () { cb(this.getBody()) })
     this.body = []
+  }
+
+  finish(timeout = 60 * 1000) {
+    const self = this;
+    return new Promise((resolve, reject) => {
+      //console.log({ writableFinished: self.writableFinished })
+      if (self.writableFinished) resolve(self.getBody())
+      else self.on('finish', _ => resolve(self.getBody()))
+
+      setTimeout(_ => reject('timeout'), timeout)
+    })
   }
 
   _write (chunk, enc, next) {
