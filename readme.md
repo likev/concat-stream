@@ -27,7 +27,7 @@ var fs = require('fs')
 var concat = require('concat-stream')
 
 var readStream = fs.createReadStream('cat.png')
-var concatStream = concat(gotPicture)
+var concatStream = new concat(gotPicture)
 
 readStream.on('error', handleError)
 readStream.pipe(concatStream)
@@ -47,7 +47,7 @@ function handleError(err) {
 #### Arrays
 
 ```js
-var write = concat(function(data) {})
+var write = new concat(function(data) {})
 write.write([1,2,3])
 write.write([4,5,6])
 write.end()
@@ -57,7 +57,7 @@ write.end()
 #### Uint8Arrays
 
 ```js
-var write = concat(function(data) {})
+var write = new concat(function(data) {})
 var a = new Uint8Array(3)
 a[0] = 97; a[1] = 98; a[2] = 99
 write.write(a)
@@ -73,7 +73,7 @@ See `test/` for more examples
 var concat = require('concat-stream')
 ```
 
-## var writable = concat(opts={}, cb)
+## var writable = new concat(opts={}, cb)
 
 Return a `writable` stream that will fire `cb(data)` with all of the data that
 was written to the stream. Data can be written to `writable` as strings,
